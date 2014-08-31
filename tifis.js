@@ -12,9 +12,31 @@ var fondo = {
 	imagenOK: false
 };
 
+
+var obs1 = {
+	disTop: 158,
+	disBottom: 248,
+	disLeft: -40,
+	disRight: 133
+};
+
+var obs2 = {
+	disTop: -50,
+	disBottom: 250,
+	disLeft: 160,
+	disRight: 235
+};
+
+var obs3 = {
+	disTop: 300,
+	disBottom: 395,
+	disLeft: 110,
+	disRight: 500
+};
+
 var tifis = {
-	x: 300,
-	y: 300,
+	x: 0,
+	y: 0,
 	frenteURL: "diana-frente.png",
 	frenteOK: false,
 
@@ -74,33 +96,70 @@ function teclado(datos)
 	if (codigo == teclas.UP) 
 	{
 		tifis.y -= tifis.velocidad;
-		if (tifis.y>158 && tifis.y<202 && tifis.x<133) {
+		//evitando obstaculo numero 1		
+		if (tifis.y>obs1.disTop && tifis.y<obs1.disBottom  && tifis.x<obs1.disRight && tifis.x>obs1.disLeft) {
 			tifis.y += tifis.velocidad;
 		};
+		//evitando obstaculo numero 2
+		if (tifis.y>obs2.disTop && tifis.y<obs2.disBottom  && tifis.x<obs2.disRight && tifis.x>obs2.disLeft) {
+			tifis.y += tifis.velocidad;
+		};
+		//evitando obstaculo numero 3
+		if (tifis.y>obs3.disTop && tifis.y<obs3.disBottom  && tifis.x<obs3.disRight && tifis.x>obs3.disLeft) {
+			tifis.y += tifis.velocidad;
+		};	
 
 	}
+
 	else if (codigo == teclas.DOWN)
 	{
 		tifis.y += tifis.velocidad;
-		if (tifis.y>158 && tifis.y<202 && tifis.x<133) {
+		//evitando obstaculo numero 1
+		if (tifis.y>obs1.disTop && tifis.y<obs1.disBottom &&  tifis.x<obs1.disRight && tifis.x>obs1.disLeft) {
+			tifis.y -= tifis.velocidad;
+		};
+		//evitando obstaculo numero 2
+		if (tifis.y>obs2.disTop && tifis.y<obs2.disBottom &&  tifis.x<obs2.disRight && tifis.x>obs2.disLeft) {
+			tifis.y -= tifis.velocidad;
+		};
+		//evitando obstaculo numero 3
+		if (tifis.y>obs3.disTop && tifis.y<obs3.disBottom &&  tifis.x<obs3.disRight && tifis.x>obs3.disLeft) {
 			tifis.y -= tifis.velocidad;
 		};
 	}
+
 	else if (codigo == teclas.RIGHT)
 	{
 		tifis.x += tifis.velocidad;
-		if (tifis.x>0 && tifis.x<133 && tifis.y>158 && tifis.y<202) {
+		//evitando obstaculo numero 1
+		if (tifis.x>obs1.disLeft && tifis.x<obs1.disRight && tifis.y>obs1.disTop && tifis.y<obs1.disBottom) {
 			tifis.x -= tifis.velocidad;
 		};
-
+		//evitando obstaculo numero 2
+		if (tifis.x>obs2.disLeft && tifis.x<obs2.disRight && tifis.y>obs2.disTop && tifis.y<obs2.disBottom) {
+			tifis.x -= tifis.velocidad;
+		};
+		//evitando obstaculo numero 3
+		if (tifis.x>obs3.disLeft && tifis.x<obs3.disRight && tifis.y>obs3.disTop && tifis.y<obs3.disBottom) {
+			tifis.x -= tifis.velocidad;
+		};
 	}
+
 	else if (codigo == teclas.LEFT)
 	{
 		tifis.x -= tifis.velocidad;
-		if (tifis.x>0 && tifis.x<133 && tifis.y>158 && tifis.y<202) {
+		//evitando obstaculo numero 1		
+		if (tifis.x>obs1.disLeft && tifis.x<obs1.disRight && tifis.y>obs1.disTop && tifis.y<obs1.disBottom) {
 			tifis.x += tifis.velocidad;
 		};
-
+		//evitando obstaculo numero 2
+		if (tifis.x>obs2.disLeft && tifis.x<obs2.disRight && tifis.y>obs2.disTop && tifis.y<obs2.disBottom) {
+			tifis.x += tifis.velocidad;
+		};
+		//evitando obstaculo numero 3
+		if (tifis.x>obs3.disLeft && tifis.x<obs3.disRight && tifis.y>obs3.disTop && tifis.y<obs3.disBottom) {
+			tifis.x += tifis.velocidad;
+		};
 	}
 
 	direccion = codigo;
