@@ -35,8 +35,8 @@ var obs3 = {
 };
 
 var tifis = {
-	x: 0,
-	y: 0,
+	x: 300,
+	y: 300,
 	frenteURL: "diana-frente.png",
 	frenteOK: false,
 
@@ -55,7 +55,11 @@ var liz = {
 	lizURL: "liz.png",
 	lizOK: false,
 	x: 400,
-	y: 200
+	y: 200,
+	disTop: 150,
+	disBottom: 250,
+	disLeft: 370,
+	disRight: 430
 };
 
 function inicio () 
@@ -107,8 +111,16 @@ function teclado(datos)
 		//evitando obstaculo numero 3
 		if (tifis.y>obs3.disTop && tifis.y<obs3.disBottom  && tifis.x<obs3.disRight && tifis.x>obs3.disLeft) {
 			tifis.y += tifis.velocidad;
-		};	
+		};
 
+		//evitando obstaculo numero 3
+		if (tifis.y>liz.disTop && tifis.y<liz.disBottom  && tifis.x<liz.disRight && tifis.x>liz.disLeft) {
+			tifis.frenteURL = 'explosion.png';
+			tifis.atrasURL = 'explosion.png';
+			tifis.derURL = 'explosion.png';
+			tifis.izqURL = 'explosion.png';
+			inicio ();
+		};		
 	}
 
 	else if (codigo == teclas.DOWN)
@@ -125,6 +137,15 @@ function teclado(datos)
 		//evitando obstaculo numero 3
 		if (tifis.y>obs3.disTop && tifis.y<obs3.disBottom &&  tifis.x<obs3.disRight && tifis.x>obs3.disLeft) {
 			tifis.y -= tifis.velocidad;
+		};
+
+		//evitando obstaculo numero 3
+		if (tifis.y>liz.disTop && tifis.y<liz.disBottom &&  tifis.x<liz.disRight && tifis.x>liz.disLeft) {
+			tifis.frenteURL = 'explosion.png';
+			tifis.atrasURL = 'explosion.png';
+			tifis.derURL = 'explosion.png';
+			tifis.izqURL = 'explosion.png';
+			inicio ();
 		};
 	}
 
@@ -143,6 +164,14 @@ function teclado(datos)
 		if (tifis.x>obs3.disLeft && tifis.x<obs3.disRight && tifis.y>obs3.disTop && tifis.y<obs3.disBottom) {
 			tifis.x -= tifis.velocidad;
 		};
+		//evitando obstaculo numero 3
+		if (tifis.x>liz.disLeft && tifis.x<liz.disRight && tifis.y>liz.disTop && tifis.y<liz.disBottom) {
+			tifis.frenteURL = 'explosion.png';
+			tifis.atrasURL = 'explosion.png';
+			tifis.derURL = 'explosion.png';
+			tifis.izqURL = 'explosion.png';
+			inicio ();
+		};
 	}
 
 	else if (codigo == teclas.LEFT)
@@ -159,6 +188,14 @@ function teclado(datos)
 		//evitando obstaculo numero 3
 		if (tifis.x>obs3.disLeft && tifis.x<obs3.disRight && tifis.y>obs3.disTop && tifis.y<obs3.disBottom) {
 			tifis.x += tifis.velocidad;
+		};
+		//evitando obstaculo numero 3
+		if (tifis.x>liz.disLeft && tifis.x<liz.disRight && tifis.y>liz.disTop && tifis.y<liz.disBottom) {
+			tifis.frenteURL = 'explosion.png';
+			tifis.atrasURL = 'explosion.png';
+			tifis.derURL = 'explosion.png';
+			tifis.izqURL = 'explosion.png';
+			inicio ();
 		};
 	}
 
