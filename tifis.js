@@ -1,10 +1,12 @@
-var tablero, direccion;
+var tablero, tifiDibujo ;
+var direccion = 0;
 
 var teclas = {
 	UP: 38,
 	DOWN: 40,
 	LEFT: 37,
-	RIGHT: 39
+	RIGHT: 39,
+	KEY_X: 88 
 };
 
 var fondo = {
@@ -35,8 +37,8 @@ var obs3 = {
 };
 
 var tifis = {
-	x: 300,
-	y: 300,
+	x: 0,
+	y: 0,
 	frenteURL: "diana-frente.png",
 	frenteOK: false,
 
@@ -49,6 +51,14 @@ var tifis = {
 	derURL: "diana-der.png",
 	derOK: false,
 	velocidad: 10
+};
+
+var bala = {
+	x: tifis.x,
+	y: tifis.y,
+	balaURL: "bala-der.png",
+	balaOK: false,
+	velocidad: 1
 };
 
 var liz = {
@@ -64,6 +74,8 @@ var liz = {
 
 function inicio () 
 {
+	console.log(direccion);
+
 	var canvas = document.getElementById("campo");
 	tablero = canvas.getContext("2d");
 	fondo.imagen = new Image();
@@ -95,7 +107,50 @@ function inicio ()
 
 function teclado(datos) 
 {
-	codigo = datos.keyCode
+	console.log(datos.keyCode);
+	codigo = datos.keyCode;
+
+	if (codigo == teclas.KEY_X && direccion == teclas.RIGHT) {
+		direccion = teclas.RIGHT;
+		bala.x = tifis.x;
+		bala.y = tifis.y;
+		bala.balaURL = "bala-der.png";
+		bala.imagen = new Image();
+		bala.imagen.src = bala.balaURL;
+		bala.imagen.onload = confirmarBala;
+		for(var i = 1; i <= 500; i++){
+		    (function(i){
+		        setTimeout(function(){
+		            bala.x += bala.velocidad;
+					if (liz.disLeft<bala.x && liz.disRight>bala.x && liz.disTop<bala.y && liz.disBottom>bala.y ) {
+						liz.lizURL = 'explosion.png';
+					};
+					inicio();	
+		        }, 5 * i);
+		    }(i));
+		} 
+	};
+
+	if (codigo == teclas.KEY_X && direccion == teclas.LEFT) {
+		direccion = teclas.LEFT;
+		bala.x = tifis.x;
+		bala.y = tifis.y;
+		bala.balaURL = "bala-izq.png";
+		bala.imagen = new Image();
+		bala.imagen.src = bala.balaURL;
+		bala.imagen.onload = confirmarBala;
+		for(var i = 1; i <= 500; i++){
+		    (function(i){
+		        setTimeout(function(){
+		            bala.x -= bala.velocidad;
+					if (liz.disLeft<bala.x && liz.disRight>bala.x && liz.disTop<bala.y && liz.disBottom>bala.y ) {
+						liz.lizURL = 'explosion.png';
+					};
+					inicio();	
+		        }, 5 * i);
+		    }(i));
+		} 
+	};
 
 	if (codigo == teclas.UP) 
 	{
@@ -113,14 +168,16 @@ function teclado(datos)
 			tifis.y += tifis.velocidad;
 		};
 
-		//evitando obstaculo numero 3
+		//si diana entra en el espacio personal liz hace que diana explote
 		if (tifis.y>liz.disTop && tifis.y<liz.disBottom  && tifis.x<liz.disRight && tifis.x>liz.disLeft) {
 			tifis.frenteURL = 'explosion.png';
 			tifis.atrasURL = 'explosion.png';
 			tifis.derURL = 'explosion.png';
 			tifis.izqURL = 'explosion.png';
 			inicio ();
-		};		
+		};
+
+		direccion = codigo;	
 	}
 
 	else if (codigo == teclas.DOWN)
@@ -139,7 +196,7 @@ function teclado(datos)
 			tifis.y -= tifis.velocidad;
 		};
 
-		//evitando obstaculo numero 3
+		//si diana entra en el espacio personal liz hace que diana explote
 		if (tifis.y>liz.disTop && tifis.y<liz.disBottom &&  tifis.x<liz.disRight && tifis.x>liz.disLeft) {
 			tifis.frenteURL = 'explosion.png';
 			tifis.atrasURL = 'explosion.png';
@@ -147,6 +204,8 @@ function teclado(datos)
 			tifis.izqURL = 'explosion.png';
 			inicio ();
 		};
+
+		direccion = codigo;
 	}
 
 	else if (codigo == teclas.RIGHT)
@@ -164,7 +223,7 @@ function teclado(datos)
 		if (tifis.x>obs3.disLeft && tifis.x<obs3.disRight && tifis.y>obs3.disTop && tifis.y<obs3.disBottom) {
 			tifis.x -= tifis.velocidad;
 		};
-		//evitando obstaculo numero 3
+		//si diana entra en el espacio personal liz hace que diana explote
 		if (tifis.x>liz.disLeft && tifis.x<liz.disRight && tifis.y>liz.disTop && tifis.y<liz.disBottom) {
 			tifis.frenteURL = 'explosion.png';
 			tifis.atrasURL = 'explosion.png';
@@ -172,6 +231,8 @@ function teclado(datos)
 			tifis.izqURL = 'explosion.png';
 			inicio ();
 		};
+
+		direccion = codigo;
 	}
 
 	else if (codigo == teclas.LEFT)
@@ -189,7 +250,7 @@ function teclado(datos)
 		if (tifis.x>obs3.disLeft && tifis.x<obs3.disRight && tifis.y>obs3.disTop && tifis.y<obs3.disBottom) {
 			tifis.x += tifis.velocidad;
 		};
-		//evitando obstaculo numero 3
+		//si diana entra en el espacio personal liz hace que diana explote
 		if (tifis.x>liz.disLeft && tifis.x<liz.disRight && tifis.y>liz.disTop && tifis.y<liz.disBottom) {
 			tifis.frenteURL = 'explosion.png';
 			tifis.atrasURL = 'explosion.png';
@@ -197,11 +258,10 @@ function teclado(datos)
 			tifis.izqURL = 'explosion.png';
 			inicio ();
 		};
+
+		direccion = codigo;
 	}
-
-	direccion = codigo;
 	console.log("tifis esta en: x: "+tifis.x+", y: "+tifis.y);
-
 
 	dibujar();
 
@@ -243,6 +303,12 @@ function confirmarLiz()
 	dibujar();
 }
 
+function confirmarBala()
+{
+	bala.balaOK = true;
+	dibujar();
+}
+
 function dibujar () 
 {
 	//capa 1
@@ -258,7 +324,13 @@ function dibujar ()
 	};
 
 	//capa 3
-	var tifiDibujo = tifis.frente;
+	if (bala.balaOK == true) 
+	{
+		tablero.drawImage(bala.imagen, bala.x, bala.y);
+	};
+
+	//capa 4
+	tifiDibujo = tifis.frente;
 	if (tifis.frenteOK && tifis.atrasOK && tifis.izqOK && tifis.derOK) 
 	{
 		if (direccion == teclas.UP) {
