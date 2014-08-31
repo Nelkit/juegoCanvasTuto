@@ -50,7 +50,7 @@ var tifis = {
 
 	derURL: "diana-der.png",
 	derOK: false,
-	velocidad: 10
+	velocidad: 50
 };
 
 var bala = {
@@ -74,8 +74,6 @@ var liz = {
 
 function inicio () 
 {
-	console.log(direccion);
-
 	var canvas = document.getElementById("campo");
 	tablero = canvas.getContext("2d");
 	fondo.imagen = new Image();
@@ -102,166 +100,47 @@ function inicio ()
 	liz.lizy.src = liz.lizURL;
 	liz.lizy.onload = confirmarLiz;
 
-	document.addEventListener("keydown", teclado);
-}
+	document.addEventListener("keydown", teclado);}
 
 function teclado(datos) 
 {
-	console.log(datos.keyCode);
 	codigo = datos.keyCode;
 
+	//determinar si disparar en sentido hacia la derecha
 	if (codigo == teclas.KEY_X && direccion == teclas.RIGHT) {
 		direccion = teclas.RIGHT;
-		bala.x = tifis.x;
-		bala.y = tifis.y;
-		bala.balaURL = "bala-der.png";
-		bala.imagen = new Image();
-		bala.imagen.src = bala.balaURL;
-		bala.imagen.onload = confirmarBala;
-		for(var i = 1; i <= 500; i++){
-		    (function(i){
-		        setTimeout(function(){
-		            bala.x += bala.velocidad;
-					if (liz.disLeft<bala.x && liz.disRight>bala.x && liz.disTop<bala.y && liz.disBottom>bala.y ) {
-						liz.lizURL = 'explosion.png';
-					};
-					inicio();	
-		        }, 5 * i);
-		    }(i));
-		} 
+		disparar(25, "bala-der.png", "der");
 	};
-
+	//determinar si disparar en sentido hacia la izquierda
 	if (codigo == teclas.KEY_X && direccion == teclas.LEFT) {
 		direccion = teclas.LEFT;
-		bala.x = tifis.x;
-		bala.y = tifis.y;
-		bala.balaURL = "bala-izq.png";
-		bala.imagen = new Image();
-		bala.imagen.src = bala.balaURL;
-		bala.imagen.onload = confirmarBala;
-		for(var i = 1; i <= 500; i++){
-		    (function(i){
-		        setTimeout(function(){
-		            bala.x -= bala.velocidad;
-					if (liz.disLeft<bala.x && liz.disRight>bala.x && liz.disTop<bala.y && liz.disBottom>bala.y ) {
-						liz.lizURL = 'explosion.png';
-					};
-					inicio();	
-		        }, 5 * i);
-		    }(i));
-		} 
+		disparar(-25, "bala-izq.png", "izq");
 	};
 
+	//evitando los obstaculos en el eje y
 	if (codigo == teclas.UP) 
 	{
 		tifis.y -= tifis.velocidad;
-		//evitando obstaculo numero 1		
-		if (tifis.y>obs1.disTop && tifis.y<obs1.disBottom  && tifis.x<obs1.disRight && tifis.x>obs1.disLeft) {
-			tifis.y += tifis.velocidad;
-		};
-		//evitando obstaculo numero 2
-		if (tifis.y>obs2.disTop && tifis.y<obs2.disBottom  && tifis.x<obs2.disRight && tifis.x>obs2.disLeft) {
-			tifis.y += tifis.velocidad;
-		};
-		//evitando obstaculo numero 3
-		if (tifis.y>obs3.disTop && tifis.y<obs3.disBottom  && tifis.x<obs3.disRight && tifis.x>obs3.disLeft) {
-			tifis.y += tifis.velocidad;
-		};
-
-		//si diana entra en el espacio personal liz hace que diana explote
-		if (tifis.y>liz.disTop && tifis.y<liz.disBottom  && tifis.x<liz.disRight && tifis.x>liz.disLeft) {
-			tifis.frenteURL = 'explosion.png';
-			tifis.atrasURL = 'explosion.png';
-			tifis.derURL = 'explosion.png';
-			tifis.izqURL = 'explosion.png';
-			inicio ();
-		};
-
-		direccion = codigo;	
+		evitarObstaculosY("arriba");
 	}
-
+	//evitando los obstaculos en el eje y
 	else if (codigo == teclas.DOWN)
 	{
 		tifis.y += tifis.velocidad;
-		//evitando obstaculo numero 1
-		if (tifis.y>obs1.disTop && tifis.y<obs1.disBottom &&  tifis.x<obs1.disRight && tifis.x>obs1.disLeft) {
-			tifis.y -= tifis.velocidad;
-		};
-		//evitando obstaculo numero 2
-		if (tifis.y>obs2.disTop && tifis.y<obs2.disBottom &&  tifis.x<obs2.disRight && tifis.x>obs2.disLeft) {
-			tifis.y -= tifis.velocidad;
-		};
-		//evitando obstaculo numero 3
-		if (tifis.y>obs3.disTop && tifis.y<obs3.disBottom &&  tifis.x<obs3.disRight && tifis.x>obs3.disLeft) {
-			tifis.y -= tifis.velocidad;
-		};
-
-		//si diana entra en el espacio personal liz hace que diana explote
-		if (tifis.y>liz.disTop && tifis.y<liz.disBottom &&  tifis.x<liz.disRight && tifis.x>liz.disLeft) {
-			tifis.frenteURL = 'explosion.png';
-			tifis.atrasURL = 'explosion.png';
-			tifis.derURL = 'explosion.png';
-			tifis.izqURL = 'explosion.png';
-			inicio ();
-		};
-
-		direccion = codigo;
+		evitarObstaculosY("abajo");
 	}
-
+	//evitando los obstaculos en el eje x
 	else if (codigo == teclas.RIGHT)
 	{
 		tifis.x += tifis.velocidad;
-		//evitando obstaculo numero 1
-		if (tifis.x>obs1.disLeft && tifis.x<obs1.disRight && tifis.y>obs1.disTop && tifis.y<obs1.disBottom) {
-			tifis.x -= tifis.velocidad;
-		};
-		//evitando obstaculo numero 2
-		if (tifis.x>obs2.disLeft && tifis.x<obs2.disRight && tifis.y>obs2.disTop && tifis.y<obs2.disBottom) {
-			tifis.x -= tifis.velocidad;
-		};
-		//evitando obstaculo numero 3
-		if (tifis.x>obs3.disLeft && tifis.x<obs3.disRight && tifis.y>obs3.disTop && tifis.y<obs3.disBottom) {
-			tifis.x -= tifis.velocidad;
-		};
-		//si diana entra en el espacio personal liz hace que diana explote
-		if (tifis.x>liz.disLeft && tifis.x<liz.disRight && tifis.y>liz.disTop && tifis.y<liz.disBottom) {
-			tifis.frenteURL = 'explosion.png';
-			tifis.atrasURL = 'explosion.png';
-			tifis.derURL = 'explosion.png';
-			tifis.izqURL = 'explosion.png';
-			inicio ();
-		};
-
-		direccion = codigo;
+		evitarObstaculosX("derecha");
 	}
-
+	//evitando los obstaculos en el eje x
 	else if (codigo == teclas.LEFT)
 	{
 		tifis.x -= tifis.velocidad;
-		//evitando obstaculo numero 1		
-		if (tifis.x>obs1.disLeft && tifis.x<obs1.disRight && tifis.y>obs1.disTop && tifis.y<obs1.disBottom) {
-			tifis.x += tifis.velocidad;
-		};
-		//evitando obstaculo numero 2
-		if (tifis.x>obs2.disLeft && tifis.x<obs2.disRight && tifis.y>obs2.disTop && tifis.y<obs2.disBottom) {
-			tifis.x += tifis.velocidad;
-		};
-		//evitando obstaculo numero 3
-		if (tifis.x>obs3.disLeft && tifis.x<obs3.disRight && tifis.y>obs3.disTop && tifis.y<obs3.disBottom) {
-			tifis.x += tifis.velocidad;
-		};
-		//si diana entra en el espacio personal liz hace que diana explote
-		if (tifis.x>liz.disLeft && tifis.x<liz.disRight && tifis.y>liz.disTop && tifis.y<liz.disBottom) {
-			tifis.frenteURL = 'explosion.png';
-			tifis.atrasURL = 'explosion.png';
-			tifis.derURL = 'explosion.png';
-			tifis.izqURL = 'explosion.png';
-			inicio ();
-		};
-
-		direccion = codigo;
+		evitarObstaculosX("izquierda");
 	}
-	console.log("tifis esta en: x: "+tifis.x+", y: "+tifis.y);
 
 	dibujar();
 
@@ -344,4 +223,131 @@ function dibujar ()
 		};
 		tablero.drawImage(tifiDibujo, tifis.x, tifis.y);
 	};
+}
+
+//aviso que se mostrara cuando el jugador gane o pierda
+function aviso(titulo, mensaje) {
+	var modal = document.getElementById("modal");
+	var tituloModal = document.getElementById("titulo-modal");
+	var mensajeModal = document.getElementById("mensaje-modal");
+
+	tituloModal.innerHTML = titulo;
+	mensajeModal.innerHTML = mensaje;
+	modal.style.display = "block";
+
+	//deshabilitar las teclas en el juego
+	teclas.DOWN = 0;
+	teclas.UP = 0;
+	teclas.LEFT = 0;
+	teclas.RIGHT = 0;
+	teclas.KEY_X = 0;
+
+}
+
+//Esta funcion hace que Tifis pueda disparar
+
+function disparar(valorResta, URLimagen, sentido) 
+{
+	bala.x = tifis.x+valorResta;
+	bala.y = tifis.y;
+	bala.balaURL = URLimagen;
+	bala.imagen = new Image();
+	bala.imagen.src = bala.balaURL;
+	bala.imagen.onload = confirmarBala;
+	//con este for hago que la bala se mueva en direcion horizontal
+	for(var i = 1; i <= 500; i++){
+	    (function(i){
+	        setTimeout(function(){
+	        	if (sentido=="der") {
+	            	bala.x += bala.velocidad;
+	            }else if(sentido=="izq"){
+	            	bala.x -= bala.velocidad;
+	            }
+				if (liz.disLeft<bala.x && liz.disRight>bala.x && liz.disTop<bala.y && liz.disBottom>bala.y ) {
+					liz.lizURL = 'explosion.png';
+					aviso("Ganastes!!!", "Felicidades has derrotado a la malévola Liz ");
+				};
+				inicio();	
+	        }, 5 * i);
+	    }(i));
+	} 
+}
+
+function evitarObstaculosY(sentido)
+{
+	//evitando obstaculo numero 1		
+	if (tifis.y>obs1.disTop && tifis.y<obs1.disBottom  && tifis.x<obs1.disRight && tifis.x>obs1.disLeft) {
+		if (sentido == "arriba") {
+			tifis.y += tifis.velocidad;
+		}else if(sentido == "abajo"){
+			tifis.y -= tifis.velocidad;
+		}
+	};
+	//evitando obstaculo numero 2
+	if (tifis.y>obs2.disTop && tifis.y<obs2.disBottom  && tifis.x<obs2.disRight && tifis.x>obs2.disLeft) {
+		if (sentido == "arriba") {
+			tifis.y += tifis.velocidad;
+		}else if(sentido == "abajo"){
+			tifis.y -= tifis.velocidad;
+		}
+	};
+	//evitando obstaculo numero 3
+	if (tifis.y>obs3.disTop && tifis.y<obs3.disBottom  && tifis.x<obs3.disRight && tifis.x>obs3.disLeft) {
+		if (sentido == "arriba") {
+			tifis.y += tifis.velocidad;
+		}else if(sentido == "abajo"){
+			tifis.y -= tifis.velocidad;
+		}
+	};
+
+	//si diana entra en el espacio personal liz hace que diana explote
+	if (tifis.y>liz.disTop && tifis.y<liz.disBottom  && tifis.x<liz.disRight && tifis.x>liz.disLeft) {
+		tifis.frenteURL = 'explosion.png';
+		tifis.atrasURL = 'explosion.png';
+		tifis.derURL = 'explosion.png';
+		tifis.izqURL = 'explosion.png';
+		inicio ();
+		aviso("Perdiste!!!", "No contabas con que Liz tiene el poder de hacer explotar con solo tocarte, LOL");
+	};
+
+	direccion = codigo;
+}
+
+function evitarObstaculosX (sentido) 
+{
+	//evitando obstaculo numero 1
+	if (tifis.x>obs1.disLeft && tifis.x<obs1.disRight && tifis.y>obs1.disTop && tifis.y<obs1.disBottom) {
+		if (sentido == "derecha") {
+			tifis.x -= tifis.velocidad;
+		}else if (sentido == "izquierda") {
+			tifis.x += tifis.velocidad;
+		};
+	};
+	//evitando obstaculo numero 2
+	if (tifis.x>obs2.disLeft && tifis.x<obs2.disRight && tifis.y>obs2.disTop && tifis.y<obs2.disBottom) {
+		if (sentido == "derecha") {
+			tifis.x -= tifis.velocidad;
+		}else if (sentido == "izquierda") {
+			tifis.x += tifis.velocidad;
+		};
+	};
+	//evitando obstaculo numero 3
+	if (tifis.x>obs3.disLeft && tifis.x<obs3.disRight && tifis.y>obs3.disTop && tifis.y<obs3.disBottom) {
+		if (sentido == "derecha") {
+			tifis.x -= tifis.velocidad;
+		}else if (sentido == "izquierda") {
+			tifis.x += tifis.velocidad;
+		};
+	};
+	//si diana entra en el espacio personal liz hace que diana explote
+	if (tifis.x>liz.disLeft && tifis.x<liz.disRight && tifis.y>liz.disTop && tifis.y<liz.disBottom) {
+		tifis.frenteURL = 'explosion.png';
+		tifis.atrasURL = 'explosion.png';
+		tifis.derURL = 'explosion.png';
+		tifis.izqURL = 'explosion.png';
+		inicio ();
+		aviso("Perdiste!!!", "No contabas con que Liz tiene el poder de hacer explotar con solo tocarte, LOL");
+	};
+
+	direccion = codigo;
 }

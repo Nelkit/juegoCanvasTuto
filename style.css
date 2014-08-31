@@ -4,3 +4,23 @@ body{
 	color: white;
 	font-family: helvetica, arial, sans-serif
 }
+
+#modal{
+	background: rgba(0,0,0,0.70);
+	width: 500px;
+	height: 500px;
+	display: none;
+	position: absolute;
+	left: 50%;
+	margin-left: -250px;
+	z-index: 200;
+}
+
+a{
+	background: rgba(0,0,0,0.1);
+	border: 2px solid #00bdf4;
+	color: #00bdf4;
+	text-decoration: none;
+	display: inline-block;
+	padding: 5px;
+}
