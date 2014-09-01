@@ -37,8 +37,8 @@ var obs3 = {
 };
 
 var tifis = {
-	x: 0,
-	y: 0,
+	x: 100,
+	y: 100,
 	frenteURL: "diana-frente.png",
 	frenteOK: false,
 
@@ -99,8 +99,8 @@ function inicio ()
 	liz.lizy = new Image();
 	liz.lizy.src = liz.lizURL;
 	liz.lizy.onload = confirmarLiz;
-
-	document.addEventListener("keydown", teclado);}
+	document.addEventListener("keydown", teclado);
+}
 
 function teclado(datos) 
 {
