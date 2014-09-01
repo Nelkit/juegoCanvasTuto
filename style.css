@@ -54,7 +54,9 @@ body{
 	z-index: 200;
 	padding-top: 180px;
 	box-sizing: border-box;
-	-moz-box-sizing: border-box; 
+	-moz-box-sizing: border-box;
+    border-radius: 23px;
+    -moz-border-radius: 23px;
 }
 
 a{
@@ -88,7 +90,7 @@ canvas:hover{
   text-decoration: none;
   background-image:url(github.png);
   background-repeat: no-repeat;
-  background-size: 25px 25px; 
+  background-size: 25px 25px;
   background-position: 2px 3px;
   background-color: #3072b3;
   border: 1px solid #2967a4;

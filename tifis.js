@@ -6,12 +6,16 @@ var teclas = {
 	DOWN: 40,
 	LEFT: 37,
 	RIGHT: 39,
-	KEY_X: 88 
+	KEY_X: 88
 };
 
 var fondo = {
 	imagenURL: "fondo.png",
-	imagenOK: false
+	imagenOK: false,
+	limiteTop: 0,
+	limiteBottom: 450,
+	limiteLeft: -10,
+	limiteRight: 460,
 };
 
 
@@ -21,6 +25,7 @@ var obs1 = {
 	disLeft: -40,
 	disRight: 133
 };
+
 
 var obs2 = {
 	disTop: -50,
@@ -72,7 +77,7 @@ var liz = {
 	disRight: 430
 };
 
-function inicio () 
+function inicio ()
 {
 	var canvas = document.getElementById("campo");
 	tablero = canvas.getContext("2d");
@@ -102,7 +107,7 @@ function inicio ()
 	document.addEventListener("keydown", teclado);
 }
 
-function teclado(datos) 
+function teclado(datos)
 {
 	codigo = datos.keyCode;
 
@@ -118,7 +123,7 @@ function teclado(datos)
 	};
 
 	//evitando los obstaculos en el eje y
-	if (codigo == teclas.UP) 
+	if (codigo == teclas.UP)
 	{
 		tifis.y -= tifis.velocidad;
 		evitarObstaculosY("arriba");
@@ -142,6 +147,7 @@ function teclado(datos)
 		evitarObstaculosX("izquierda");
 	}
 
+	console.log("posicion de tifis en x: "+tifis.x+", en y: "+tifis.y);
 	dibujar();
 
 }
@@ -176,7 +182,7 @@ function confirmarIzq()
 	dibujar();
 }
 
-function confirmarLiz() 
+function confirmarLiz()
 {
 	liz.lizOK = true;
 	dibujar();
@@ -188,29 +194,29 @@ function confirmarBala()
 	dibujar();
 }
 
-function dibujar () 
+function dibujar ()
 {
 	//capa 1
-	if (fondo.imagenOK == true) 
+	if (fondo.imagenOK == true)
 	{
 		tablero.drawImage(fondo.imagen, 0, 0);
 	};
 
 	//capa 2
-	if (liz.lizOK == true) 
+	if (liz.lizOK == true)
 	{
 		tablero.drawImage(liz.lizy, liz.x, liz.y);
 	};
 
 	//capa 3
-	if (bala.balaOK == true) 
+	if (bala.balaOK == true)
 	{
 		tablero.drawImage(bala.imagen, bala.x, bala.y);
 	};
 
 	//capa 4
 	tifiDibujo = tifis.frente;
-	if (tifis.frenteOK && tifis.atrasOK && tifis.izqOK && tifis.derOK) 
+	if (tifis.frenteOK && tifis.atrasOK && tifis.izqOK && tifis.derOK)
 	{
 		if (direccion == teclas.UP) {
 			tifiDibujo = tifis.atras;
@@ -246,7 +252,7 @@ function aviso(titulo, mensaje) {
 
 //Esta funcion hace que Tifis pueda disparar
 
-function disparar(valorResta, URLimagen, sentido) 
+function disparar(valorResta, URLimagen, sentido)
 {
 	bala.x = tifis.x+valorResta;
 	bala.y = tifis.y;
@@ -267,15 +273,15 @@ function disparar(valorResta, URLimagen, sentido)
 					liz.lizURL = 'explosion.png';
 					aviso("Ganastes!!!", "Felicidades has derrotado a la malévola Liz ");
 				};
-				inicio();	
+				inicio();
 	        }, 5 * i);
 	    }(i));
-	} 
+	}
 }
 
 function evitarObstaculosY(sentido)
 {
-	//evitando obstaculo numero 1		
+	//evitando obstaculo numero 1
 	if (tifis.y>obs1.disTop && tifis.y<obs1.disBottom  && tifis.x<obs1.disRight && tifis.x>obs1.disLeft) {
 		if (sentido == "arriba") {
 			tifis.y += tifis.velocidad;
@@ -299,6 +305,14 @@ function evitarObstaculosY(sentido)
 			tifis.y -= tifis.velocidad;
 		}
 	};
+	//evitando que tifis se salga del cuadro de canvas en eje y
+	if (tifis.y>fondo.limiteBottom || tifis.y<fondo.limiteTop) {
+		if (sentido == "arriba") {
+			tifis.y += tifis.velocidad;
+		}else if(sentido == "abajo"){
+			tifis.y -= tifis.velocidad;
+		}
+	};
 
 	//si diana entra en el espacio personal liz hace que diana explote
 	if (tifis.y>liz.disTop && tifis.y<liz.disBottom  && tifis.x<liz.disRight && tifis.x>liz.disLeft) {
@@ -313,7 +327,7 @@ function evitarObstaculosY(sentido)
 	direccion = codigo;
 }
 
-function evitarObstaculosX (sentido) 
+function evitarObstaculosX (sentido)
 {
 	//evitando obstaculo numero 1
 	if (tifis.x>obs1.disLeft && tifis.x<obs1.disRight && tifis.y>obs1.disTop && tifis.y<obs1.disBottom) {
@@ -333,6 +347,14 @@ function evitarObstaculosX (sentido)
 	};
 	//evitando obstaculo numero 3
 	if (tifis.x>obs3.disLeft && tifis.x<obs3.disRight && tifis.y>obs3.disTop && tifis.y<obs3.disBottom) {
+		if (sentido == "derecha") {
+			tifis.x -= tifis.velocidad;
+		}else if (sentido == "izquierda") {
+			tifis.x += tifis.velocidad;
+		};
+	};
+	//evitando que tifis se salga del cuadro de canvas en eje x
+	if (tifis.x>fondo.limiteRight || tifis.x<fondo.limiteLeft) {
 		if (sentido == "derecha") {
 			tifis.x -= tifis.velocidad;
 		}else if (sentido == "izquierda") {
