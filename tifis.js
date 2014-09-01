@@ -50,7 +50,7 @@ var tifis = {
 
 	derURL: "diana-der.png",
 	derOK: false,
-	velocidad: 50
+	velocidad: 10
 };
 
 var bala = {

@@ -1,0 +1,23 @@
+---
+applications:
+  .:
+    name: legendtifis
+    framework:
+      name: standalone
+      info:
+        mem: 64M
+        description: Standalone Application
+        exec: 
+    runtime: php
+    command: phpinfo();
+    infra: aws
+    url: 
+    mem: 128M
+    instances: 1
+    services:
+      pronostico:
+        type: mysql
+      mongodb-bf175:
+        type: mongodb
+      tifis:
+        type: mysql
